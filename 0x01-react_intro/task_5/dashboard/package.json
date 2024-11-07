@@ -4,23 +4,41 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --config config/webpack.config.js",
-    "build": "webpack --config config/webpack.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "build": "webpack build --config ./config/webpack.config.js",
+    "start": "webpack-dev-server --mode development --config config/webpack.config.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.26.0",
+    "@babel/plugin-proposal-logical-assignment-operators": "^7.20.7",
+    "@babel/plugin-transform-runtime": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
     "babel-loader": "^9.2.1",
     "css-loader": "^7.1.2",
+    "enzyme-adapter-react-16": "^1.15.8",
     "image-webpack-loader": "^8.1.0",
+    "jest": "^29.7.0",
+    "jest-transform-stub": "^2.0.0",
     "style-loader": "^4.0.0",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy",
+      "\\.(jpg|jpeg|png|gif|bmp)$": "<rootDir>/__mocks__/fileMock.js"
+    }
   }
 }
