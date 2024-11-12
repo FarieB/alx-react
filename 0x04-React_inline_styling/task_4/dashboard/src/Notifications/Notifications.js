@@ -1,19 +1,18 @@
-import React, { Component } from "react";
-import { StyleSheet, css } from "aphrodite";
-import closeIcon from "../assets/close-icon.png";
-import NotificationItem from "./NotificationItem";
-import PropTypes from "prop-types";
-import NotificationItemShape from "./NotificationItemShape";
+import React from 'react';
+import closeIcon from '../assets/close-icon.png';
+import NotificationItem from './NotificationItem';
+import PropTypes from 'prop-types'; // Fixed the typo here
+import NotificationItemShape from './NotificationItemShape';
+import { StyleSheet, css } from 'aphrodite';
 
-class Notifications extends Component {
+class Notifications extends React.Component {
   constructor(props) {
     super(props);
-
     this.markAsRead = this.markAsRead.bind(this);
   }
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.length > this.props.listNotifications.length;
+    return nextProps.listNotifications.length > this.props.listNotifications.length;
   }
 
   markAsRead(id) {
@@ -22,38 +21,42 @@ class Notifications extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <div className={css(styles.menuItem)}>
-          <p>Your notifications</p>
-        </div>
-        {this.props.displayDrawer ? (
-          <div className={css(styles.Notifications)}>
+      <>
+        {!this.props.displayDrawer ? (
+          <div className={css(notificationStyles.menuItem)}>
+            Your notifications
+          </div>
+        ) : (
+          <div className={css(notificationStyles.notifications)}>
             <button
               style={{
-                color: "#3a3a3a",
-                fontWeight: "bold",
-                background: "none",
-                border: "none",
-                fontSize: "15px",
-                position: "absolute",
-                right: "3px",
-                top: "3px",
-                cursor: "pointer",
-                outline: "none",
+                color: '#3a3a3a',
+                fontWeight: 'bold',
+                background: 'none',
+                border: 'none',
+                fontSize: '15px',
+                position: 'absolute',
+                right: '3px',
+                top: '3px',
+                cursor: 'pointer',
+                outline: 'none',
               }}
               aria-label="Close"
+              className={css(notificationStyles.button)}
               onClick={(e) => {
-                console.log("Close button has been clicked");
+                console.log('Close button has been clicked');
               }}
             >
-              <img src={closeIcon} alt="close icon" width="10px" />
+              <img src={closeIcon} alt="close icon" width="15px" />
             </button>
-            {this.props.listNotifications.length !== 0 ? <p>Here is the list of notifications</p> : null}
-            <ul className={css(styles.notificationList)}>
+            {this.props.listNotifications.length !== 0 ? (
+              <p>Here is the list of notifications</p>
+            ) : null}
+            <ul className={css(notificationStyles.ul)}>
               {this.props.listNotifications.length === 0 ? (
                 <NotificationItem type="default" value="No new notification for now" />
               ) : null}
-              {this.props.listNotifications.map((val, idx) => {
+              {this.props.listNotifications.map((val) => {
                 return (
                   <NotificationItem
                     type={val.type}
@@ -67,62 +70,76 @@ class Notifications extends Component {
               })}
             </ul>
           </div>
-        ) : null}
-      </React.Fragment>
+        )}
+      </>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  Notifications: {
-    padding: 0, // No padding for the entire notification panel
-    border: "2px dashed red",
-    position: "fixed", // Use fixed to make it occupy the entire screen
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    backgroundColor: "#fff",
-    zIndex: 999, // Ensure it is above other elements
-    fontSize: "20px", // Set the font size to 20px
-  },
+const opacityAnim = {
+  '0%': { opacity: 0.5 },
+  '100%': { opacity: 1 },
+};
 
-  notificationList: {
-    padding: 0, // Remove padding from the ul element
-    margin: 0, // Ensure no margin on the ul
-    listStyle: "none", // Remove the default list styling
-  },
+const bounceAnim = {
+  '0%': { transform: 'translateY(0px)' },
+  '33%': { transform: 'translateY(-5px)' },
+  '66%': { transform: 'translateY(5px)' },
+  '100%': { transform: 'translateY(0px)' },
+};
 
-  "notification-header": {
-    display: "flex",
-    justifyContent: "space-between",
+const notificationStyles = StyleSheet.create({
+  notifications: {
+    border: '3px dotted var(--holberton-red)',
+    padding: '6px 12px',
+    position: 'absolute',
+    top: '21px',
+    right: '7px',
+    marginTop: '12px',
+    zIndex: '100',
+    '@media (max-width: 900px)': {
+      width: '100%',
+      padding: '0px',
+      fontSize: 20,
+      position: 'relative',
+      right: 0,
+      left: 0,
+      border: 'none',
+    },
   },
-
   menuItem: {
-    textAlign: "right",
+    position: 'relative',
+    zIndex: 100,
+    float: 'right',
+    backgroundColor: '#fff8f8',
+    ':hover': {
+      cursor: 'pointer',
+      animationName: [opacityAnim, bounceAnim],
+      animationDuration: '1s, 0.5s',
+      animationIterationCount: '3',
+    },
   },
-
-  '[data-notification-type="default"]': {
-    color: "blue",
+  ul: {
+    '@media (max-width: 900px)': {
+      padding: 0,
+    },
   },
-
-  "[data-urgent]": {
-    color: "red",
-  },
-
-  '[data-notification-type="urgent"]': {
-    color: "red",
+  button: {
+    '@media (max-width: 900px)': {
+      position: 'relative',
+      float: 'right',
+    },
   },
 });
-
-Notifications.propTypes = {
-  displayDrawer: PropTypes.bool,
-  listNotifications: PropTypes.arrayOf(NotificationItemShape),
-};
 
 Notifications.defaultProps = {
   displayDrawer: false,
   listNotifications: [],
+};
+
+Notifications.propTypes = {
+  displayDrawer: PropTypes.bool,
+  listNotifications: PropTypes.arrayOf(NotificationItemShape),
 };
 
 export default Notifications;
