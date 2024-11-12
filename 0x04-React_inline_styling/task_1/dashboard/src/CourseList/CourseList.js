@@ -1,38 +1,49 @@
 import React from 'react';
 import PropType from 'prop-types';
+import { StyleSheet, css } from 'aphrodite';
 import CourseShape from './CourseShape';
 import CourseListRow from './CourseListRow';
-import './CourseList.css';
 
 function CourseList({ listCourses }) {
   return (
-    <table id="CourseList" cellPadding="0" cellSpacing="0">
+    <table className={css(styles.courseList)} cellPadding="0" cellSpacing="0">
       <thead>
-        <CourseListRow isHeader={true} textFirstCell='Available courses' />
-        <CourseListRow isHeader={true} textFirstCell='Course name' textSecondCell="Credit" />
+        <CourseListRow isHeader={true} textFirstCell="Available courses" />
+        <CourseListRow isHeader={true} textFirstCell="Course name" textSecondCell="Credit" />
       </thead>
       <tbody>
-        {
-        listCourses.length == 0 ?
-          <CourseListRow isHeader={false} textFirstCell='No course available yet'/>
-        : null
-        }
-        {
-          listCourses.map((val, idx) => {
-            return <CourseListRow isHeader={false} textFirstCell={val.name} textSecondCell={val.credit} key={val.id}/>
-          })
-        }
+        {listCourses.length === 0 ? (
+          <CourseListRow isHeader={false} textFirstCell="No course available yet" />
+        ) : (
+          listCourses.map((course) => (
+            <CourseListRow
+              isHeader={false}
+              textFirstCell={course.name}
+              textSecondCell={course.credit}
+              key={course.id}
+            />
+          ))
+        )}
       </tbody>
     </table>
   );
 }
 
+const styles = StyleSheet.create({
+  courseList: {
+    width: '100%',
+    border: '1px solid #ddd',
+    borderCollapse: 'collapse',
+    marginTop: '20px',
+  },
+});
+
 CourseList.defaultProps = {
-  listCourses: []
+  listCourses: [],
 };
 
-CourseList.propType = {
-  listCourses: PropType.arrayOf(CourseShape)
+CourseList.propTypes = {
+  listCourses: PropType.arrayOf(CourseShape),
 };
 
 export default CourseList;
