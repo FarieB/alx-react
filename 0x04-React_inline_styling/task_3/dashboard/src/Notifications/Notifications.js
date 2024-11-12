@@ -48,11 +48,22 @@ class Notifications extends Component {
             >
               <img src={closeIcon} alt="close icon" width="10px" />
             </button>
-            {this.props.listNotifications.length != 0 ? <p>Here is the list of notifications</p> : null}
-            <ul>
-              {this.props.listNotifications.length == 0 ? <NotificationItem type="default" value="No new notification for now" /> : null}
+            {this.props.listNotifications.length !== 0 ? <p>Here is the list of notifications</p> : null}
+            <ul className={css(styles.notificationList)}>
+              {this.props.listNotifications.length === 0 ? (
+                <NotificationItem type="default" value="No new notification for now" />
+              ) : null}
               {this.props.listNotifications.map((val, idx) => {
-                return <NotificationItem type={val.type} value={val.value} html={val.html} key={val.id} markAsRead={this.markAsRead} id={val.id} />;
+                return (
+                  <NotificationItem
+                    type={val.type}
+                    value={val.value}
+                    html={val.html}
+                    key={val.id}
+                    markAsRead={this.markAsRead}
+                    id={val.id}
+                  />
+                );
               })}
             </ul>
           </div>
@@ -64,11 +75,22 @@ class Notifications extends Component {
 
 const styles = StyleSheet.create({
   Notifications: {
-    padding: "1em",
+    padding: 0, // No padding for the entire notification panel
     border: "2px dashed red",
-    position: "absolute",
-    top: "1.8em",
-    right: "0",
+    position: "fixed", // Use fixed to make it occupy the entire screen
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: "#fff",
+    zIndex: 999, // Ensure it is above other elements
+    fontSize: "20px", // Set the font size to 20px
+  },
+
+  notificationList: {
+    padding: 0, // Remove padding from the ul element
+    margin: 0, // Ensure no margin on the ul
+    listStyle: "none", // Remove the default list styling
   },
 
   "notification-header": {
