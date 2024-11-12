@@ -36,25 +36,35 @@ class NotificationItem extends React.PureComponent {
 
 const styles = StyleSheet.create({
   default: {
-    color: 'blue',
+    fontSize: "20px",        // Set font size to 20px
+    padding: "10px 8px",     // Set padding to 10px 8px
+    width: "100%",           // Make the item take the full width
+    borderBottom: "1px solid black", // Black border at the bottom
   },
+
   urgent: {
-    color: '#e1484c', // Holberton red or urgent color
-  }
+    fontSize: "20px",        // Set font size to 20px
+    padding: "10px 8px",     // Set padding to 10px 8px
+    width: "100%",           // Make the item take the full width
+    borderBottom: "1px solid black", // Black border at the bottom
+    color: "red",            // Urgent notifications in red
+  },
 });
 
-NotificationItem.defaultProps = {
-  type: 'default',
-  markAsRead: () => { console.log('empty func'); },
-  id: 0,
+NotificationItem.propTypes = {
+  type: PropTypes.string,
+  value: PropTypes.string,
+  html: PropTypes.shape({ __html: PropTypes.string }),
+  markAsRead: PropTypes.func,
+  id: PropTypes.number,
 };
 
-NotificationItem.propTypes = {
-  html: PropTypes.shape({ __html: PropTypes.string }),
-  type: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  markAsRead: PropTypes.func,
-  id: PropTypes.number
+NotificationItem.defaultProps = {
+  type: "default",
+  value: "",
+  html: { __html: "" },
+  markAsRead: () => {},
+  id: 0,
 };
 
 export default NotificationItem;
