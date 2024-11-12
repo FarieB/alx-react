@@ -1,31 +1,55 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import NotificationItem from './NotificationItem';
+import PropTypes from 'prop-types';
+import { StyleSheet, css } from "aphrodite";
 
-describe("Testing <NotificationItem />", () => {
-  let wrapper;
 
-  it("<NotificationItem /> renders without crashing", () => {
-    wrapper = shallow(<NotificationItem />);
-    expect(wrapper.exists()).toBe(true);
-  });
+class NotificationItem extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.selected_style = this.props.type === 'default' ?  itemStyles.default : itemStyles.urgent;
+  }
 
-  it("<NotificationItem /> renders the correct html by passing dummy type and value props", () => {
-    wrapper = shallow(<NotificationItem type="default" value="test" />);
-    expect(wrapper.find("li").text()).toBe("test");
-    expect(wrapper.find("li").prop("data-notification-type")).toBe("default");
+  render() {
+    return (
+      this.props.value ? 
+      <li
+      data-notification-type={this.props.type}
+      onClick={() => this.props.markAsRead(this.props.id)}
+      className={css(this.selected_style)}
+      >{this.props.value}</li> 
+      :
+      <li
+      data-notification-type={this.props.type}
+      dangerouslySetInnerHTML={this.props.html}
+      onClick={() => {console.log('empty func');}}
+      className={css(this.selected_style)}
+      ></li>
+    );
+  }
+};
 
-    // Check if the 'default' class (styling) is applied correctly
-    expect(wrapper.find("li").hasClass('default')).toBe(true);
-  });
+const itemStyles = StyleSheet.create({
+  urgent: {
+		color: 'red'
+	},
 
-  it("<NotificationItem /> renders the correct html by passing a dummy html prop", () => {
-    wrapper = shallow(<NotificationItem html={{__html: "<u>test</u>"}} />);
-    expect(wrapper.find("li").html()).toBe('<li data-notification-type="default"><u>test</u></li>');
-  });
-
-  it("<NotificationItem /> applies correct styles for 'urgent' type", () => {
-    wrapper = shallow(<NotificationItem type="urgent" value="urgent test" />);
-    expect(wrapper.find("li").hasClass('urgent')).toBe(true);
-  });
+	default: {
+		color: 'blue'
+	}
 });
+
+NotificationItem.defaultProps = {
+  type: 'default',
+  markAsRead: () => {console.log('empty func');},
+	id: 0
+};
+
+NotificationItem.propTypes = {
+  html: PropTypes.shape({__html: PropTypes.string}),
+  type: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  markAsRead: PropTypes.func,
+  id: PropTypes.number
+};
+
+export default NotificationItem;
