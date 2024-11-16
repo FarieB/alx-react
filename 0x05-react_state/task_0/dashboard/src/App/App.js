@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import Notification from '../Notifications/Notifications';
+import Notifications from '../Notifications/Notifications';
 import Login from '../Login/Login';
 import CourseList from '../CourseList/CourseList';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
@@ -66,7 +66,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Notification
+        <Notifications
           listNotifications={this.listNotifications}
           displayDrawer={this.state.displayDrawer}
           handleDisplayDrawer={this.handleDisplayDrawer}
