@@ -1,4 +1,5 @@
 import React from "react";
+import { AppProvider } from "../AppContext"; // Assuming AppContext is correctly imported
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Login from "../Login/Login";
@@ -78,7 +79,7 @@ class App extends React.Component {
     const { user } = this.state;
 
     return (
-      <React.Fragment>
+      <AppProvider value={{ user, logOut: this.logOut }}> {/* Wrap app in AppContext.Provider */}
         <div className={css(styles.App)}>
           <div className="heading-section">
             <Notifications listNotifications={this.listNotifications} />
@@ -101,7 +102,7 @@ class App extends React.Component {
           </BodySection>
           <Footer />
         </div>
-      </React.Fragment>
+      </AppProvider>
     );
   }
 }
