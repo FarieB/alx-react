@@ -10,24 +10,32 @@ import BodySection from '../BodySection/BodySection';
 import { getLatestNotification } from '../utils/utils';
 import PropTypes from 'prop-types';
 
-
 class App extends React.Component {
-  
   constructor(props) {
     super(props);
+
+    // Initialize state
+    this.state = {
+      displayDrawer: false,
+    };
+
     this.isLoggedIn = props.isLoggedIn;
     this.logOut = props.logOut;
+
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this);
+    this.handleHideDrawer = this.handleHideDrawer.bind(this);
+
     this.listCourses = [
-      {id: 1, name: 'ES6', credit: 60},
-      {id: 2, name: 'Webpack', credit: 20},
-      {id: 3, name: 'React', credit: 40}
+      { id: 1, name: 'ES6', credit: 60 },
+      { id: 2, name: 'Webpack', credit: 20 },
+      { id: 3, name: 'React', credit: 40 },
     ];
-  
+
     this.listNotifications = [
-      {id: 1, value: "New course available", type: "default"},
-      {id: 2, value: "New resume available", type: "urgent"},
-      {id: 3, html: {__html: getLatestNotification()}, type: "urgent"},
+      { id: 1, value: "New course available", type: "default" },
+      { id: 2, value: "New resume available", type: "urgent" },
+      { id: 3, html: { __html: getLatestNotification() }, type: "urgent" },
     ];
   }
 
@@ -36,7 +44,15 @@ class App extends React.Component {
       e.preventDefault();
       alert("Logging you out");
       this.logOut();
-    }  
+    }
+  }
+
+  handleDisplayDrawer() {
+    this.setState({ displayDrawer: true });
+  }
+
+  handleHideDrawer() {
+    this.setState({ displayDrawer: false });
   }
 
   componentDidMount() {
@@ -47,17 +63,26 @@ class App extends React.Component {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  render () {
+  render() {
     return (
       <React.Fragment>
-        <Notification listNotifications={this.listNotifications}/>
+        <Notification
+          listNotifications={this.listNotifications}
+          displayDrawer={this.state.displayDrawer}
+          handleDisplayDrawer={this.handleDisplayDrawer}
+          handleHideDrawer={this.handleHideDrawer}
+        />
         <div className="App">
           <Header />
-          {this.props.isLoggedIn ?
-            <BodySectionWithMarginBottom title="Course list"><CourseList listCourses={this.listCourses}/></BodySectionWithMarginBottom>
-          : 
-            <BodySectionWithMarginBottom title="Log in to continue"><Login /></BodySectionWithMarginBottom>
-          }
+          {this.props.isLoggedIn ? (
+            <BodySectionWithMarginBottom title="Course list">
+              <CourseList listCourses={this.listCourses} />
+            </BodySectionWithMarginBottom>
+          ) : (
+            <BodySectionWithMarginBottom title="Log in to continue">
+              <Login />
+            </BodySectionWithMarginBottom>
+          )}
           <BodySection title="News from the School">
             <p>Random Text</p>
           </BodySection>
@@ -70,12 +95,12 @@ class App extends React.Component {
 
 App.defaultProps = {
   isLoggedIn: false,
-  logOut: () => {}
+  logOut: () => {},
 };
 
 App.propTypes = {
   isLoggedIn: PropTypes.bool,
-  logOut: PropTypes.func
+  logOut: PropTypes.func,
 };
 
 export default App;
