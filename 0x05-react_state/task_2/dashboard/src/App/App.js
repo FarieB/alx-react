@@ -7,13 +7,22 @@ import Notifications from "../Notifications/Notifications";
 import BodySectionWithMarginBottom from "../BodySection/BodySectionWithMarginBottom";
 import BodySection from "../BodySection/BodySection";
 import { StyleSheet, css } from "aphrodite";
-import PropTypes from "prop-types";
 import { getLatestNotification } from "../utils/utils";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      user: {
+        email: "",
+        password: "",
+        isLoggedIn: false,
+      },
+    };
+
+    this.logIn = this.logIn.bind(this);
+    this.logOut = this.logOut.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
@@ -33,9 +42,10 @@ class App extends React.Component {
     if (e.ctrlKey && e.key === "h") {
       e.preventDefault();
       alert("Logging you out");
-      this.props.logOut();
+      this.logOut();
     }
   }
+
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyPress);
   }
@@ -44,7 +54,29 @@ class App extends React.Component {
     document.removeEventListener("keydown", this.handleKeyPress);
   }
 
+  logIn(email, password) {
+    this.setState({
+      user: {
+        email,
+        password,
+        isLoggedIn: true,
+      },
+    });
+  }
+
+  logOut() {
+    this.setState({
+      user: {
+        email: "",
+        password: "",
+        isLoggedIn: false,
+      },
+    });
+  }
+
   render() {
+    const { user } = this.state;
+
     return (
       <React.Fragment>
         <div className={css(styles.App)}>
@@ -52,13 +84,13 @@ class App extends React.Component {
             <Notifications listNotifications={this.listNotifications} />
             <Header />
           </div>
-          {this.props.isLoggedIn ? (
+          {user.isLoggedIn ? (
             <BodySectionWithMarginBottom title="Course list">
               <CourseList listCourses={this.listCourses} />
             </BodySectionWithMarginBottom>
           ) : (
             <BodySectionWithMarginBottom title="Log in to continue">
-              <Login />
+              <Login logIn={this.logIn} />
             </BodySectionWithMarginBottom>
           )}
           <BodySection title="News from the school">
@@ -82,17 +114,5 @@ const styles = StyleSheet.create({
     fontFamily: "Arial, Helvetica, sans-serif",
   },
 });
-
-App.defaultProps = {
-  isLoggedIn: false,
-  logOut: () => {
-    return;
-  },
-};
-
-App.propTypes = {
-  isLoggedIn: PropTypes.bool,
-  logOut: PropTypes.func,
-};
 
 export default App;
