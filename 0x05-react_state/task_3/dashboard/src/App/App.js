@@ -15,6 +15,14 @@ class App extends React.Component {
     super(props);
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
+
+    this.state = {
+      listNotifications: [
+        { id: 1, type: "default", value: "New course available" },
+        { id: 2, type: "urgent", value: "New resume available" },
+        { id: 3, type: "urgent", html: getLatestNotification() },
+      ],
+    };
   }
 
   listCourses = [
@@ -23,11 +31,13 @@ class App extends React.Component {
     { id: 3, name: "React", credit: 40 },
   ];
 
-  listNotifications = [
-    { id: 1, type: "default", value: "New course available" },
-    { id: 2, type: "urgent", value: "New resume available" },
-    { id: 3, type: "urgent", html: getLatestNotification() },
-  ];
+  markNotificationAsRead = (id) => {
+    this.setState((prevState) => ({
+      listNotifications: prevState.listNotifications.filter(
+        (notification) => notification.id !== id
+      ),
+    }));
+  };
 
   handleKeyPress(e) {
     if (e.ctrlKey && e.key === "h") {
@@ -36,6 +46,7 @@ class App extends React.Component {
       this.props.logOut();
     }
   }
+
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeyPress);
   }
@@ -49,7 +60,10 @@ class App extends React.Component {
       <React.Fragment>
         <div className={css(styles.App)}>
           <div className="heading-section">
-            <Notifications listNotifications={this.listNotifications} />
+            <Notifications
+              listNotifications={this.state.listNotifications}
+              markNotificationAsRead={this.markNotificationAsRead}
+            />
             <Header />
           </div>
           {this.props.isLoggedIn ? (
